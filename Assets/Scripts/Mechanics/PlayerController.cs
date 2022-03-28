@@ -8,6 +8,7 @@ using Platformer.Core;
 
 namespace Platformer.Mechanics
 {
+	/// version 0.01.2
     /// <summary>
     /// This is the main class used to implement control of the player.
     /// It is a superset of the AnimationController class, but is inlined to allow for any kind of customisation.
@@ -17,7 +18,7 @@ namespace Platformer.Mechanics
         public AudioClip jumpAudio;
         public AudioClip respawnAudio;
         public AudioClip ouchAudio;
-		//public GravState gravState = GravState.Down;
+		
         /// <summary>
         /// Max horizontal speed of the player.
         /// </summary>
@@ -46,7 +47,6 @@ namespace Platformer.Mechanics
 
         void Awake()
         {
-			
 			defGravity = new Vector2(0, -9.8f);
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();

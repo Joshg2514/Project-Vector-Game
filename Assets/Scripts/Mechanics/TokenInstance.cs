@@ -5,6 +5,7 @@ using static Platformer.Core.Simulation;
 
 namespace Platformer.Mechanics
 {
+	/// version 0.01.2
     /// <summary>
     /// This class contains the data required for implementing token collection mechanics.
     /// It does not perform animation of the token, this is handled in a batch by the 

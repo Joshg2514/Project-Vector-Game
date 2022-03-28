@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Platformer.Mechanics
 {
+	/// version 0.01.2
     /// <summary>
     /// Implements game physics for some in game entity.
     /// </summary>

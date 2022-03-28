@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Platformer.Gameplay
 {
+	/// version 0.01.2
     /// <summary>
     /// Fired when a player collides with a token.
     /// </summary>
