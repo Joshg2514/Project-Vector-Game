@@ -8,7 +8,7 @@ using Platformer.Core;
 
 namespace Platformer.Mechanics
 {
-	/// version 0.01.2
+	/// version 0.01.3
     /// <summary>
     /// This is the main class used to implement control of the player.
     /// It is a superset of the AnimationController class, but is inlined to allow for any kind of customisation.
@@ -47,6 +47,7 @@ namespace Platformer.Mechanics
 
         void Awake()
         {
+			
 			defGravity = new Vector2(0, -9.8f);
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
@@ -109,7 +110,6 @@ namespace Platformer.Mechanics
 
         protected override void ComputeVelocity()
         {
-			
             if (jump && IsGrounded)
             {
                 velocity.y = jumpTakeOffSpeed * model.jumpModifier;
@@ -135,10 +135,22 @@ namespace Platformer.Mechanics
             targetVelocity = move * maxSpeed;
         }
 		
+
+		
 		public void changeGravyState(int a)
         {
 			changeGravState(a);
         }
+		public void addForce(Vector2 dir, int i)
+        {
+			push(dir, i);
+        }
+		public void stopForce(Vector2 dir)
+        {
+			stoppush(dir);
+        }
+
+		
         public enum JumpState
         {
             Grounded,

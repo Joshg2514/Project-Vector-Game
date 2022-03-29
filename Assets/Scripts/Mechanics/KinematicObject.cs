@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Platformer.Mechanics
 {
-	/// version 0.01.2
+	/// version 0.01.3
     /// <summary>
     /// Implements game physics for some in game entity.
     /// </summary>
@@ -19,7 +19,8 @@ namespace Platformer.Mechanics
         /// A custom gravity coefficient applied to this entity.
         /// </summary>
         public float gravityModifier = 1f;
-		protected Vector2 defGravity;
+		public Vector2 defGravity;
+		public Vector2 addvelocity = new Vector2(0, 0);
 		public float maxFallVelocity = 20f;
         /// <summary>
         /// The current velocity of the entity.
@@ -46,7 +47,11 @@ namespace Platformer.Mechanics
         protected const float minMoveDistance = 0.001f;
         protected const float shellRadius = 0.01f;
 		
-
+		internal bool affectedGrav = false;
+		internal int gravint;
+		internal int pushint;
+		internal int gravtemp;
+		internal float maxSeed = 6f;
         /// <summary>
         /// Bounce the object's vertical velocity.
         /// </summary>
@@ -65,6 +70,32 @@ namespace Platformer.Mechanics
             velocity.y = dir.y;
             velocity.x = dir.x;
         }
+		public void push(Vector2 dir, int i)
+        {
+			dir = convertAbsVectorToRelativeVector(dir);
+            defGravity.y = dir.y;
+            defGravity.x = dir.x;
+			maxFallVelocity = 10f;
+			pushint = i;
+			gravtemp = GravDir;
+			if(i == 3 || i == 1)
+				GravDir = -1;
+			if(i == 2 || i == 4)
+				GravDir = 1;
+			affectedGrav = true;
+			
+        }
+		public void stoppush(Vector2 dir)
+        {
+			dir = convertAbsVectorToRelativeVector(dir);
+            defGravity.y = -9.8f;
+            defGravity.x = 0;
+			maxFallVelocity = 20f;
+			
+			GravDir = gravtemp;
+			
+			affectedGrav = false;
+        }
 
         /// <summary>
         /// Teleport to some position.
@@ -82,6 +113,8 @@ namespace Platformer.Mechanics
 			
             body = GetComponent<Rigidbody2D>();
             body.isKinematic = true;
+			//body.transform.localEulerAngles = new Vector3(0,0,90);
+			//body.transform.rotation = Quaternion.Euler(Vector3.forward * 90);
         }
 
         protected virtual void OnDisable()
@@ -107,24 +140,42 @@ namespace Platformer.Mechanics
         {
 
         }
+		
+		protected virtual void AddForce()
+		{
+			
+		}
 
         protected virtual void FixedUpdate()
         {
             //if already falling, fall faster than the jump speed, otherwise use normal gravity.
-			
-			if(maxFallVelocity > -velocity.y)
+			if(!affectedGrav){
+			if(maxFallVelocity > -velocity.y )
 			{
             if (-velocity.y > 0 )
                 velocity += gravityModifier * defGravity * Time.deltaTime ;
             else
                 velocity += defGravity * Time.deltaTime ;
 			}
+			}
+			else if(maxFallVelocity > -rotateVector(velocity, 4%pushint).y)
+			{
+			//if (-rotateVector(velocity, pushint).x > 0 )
+           // velocity += gravityModifier * defGravity * Time.deltaTime ;
+           // else
+            velocity += gravityModifier * defGravity * Time.deltaTime ;
+			}
+			if(IsGrounded)
+				velocity.x = targetVelocity.x;
+			else if(Mathf.Abs(velocity.x + targetVelocity.x) < Mathf.Abs(velocity.x))
+				velocity.x = targetVelocity.x*.9f;
+			else if(Mathf.Abs(velocity.x + targetVelocity.x) < maxSeed && !affectedGrav)
+				velocity.x += targetVelocity.x;
 			
-            velocity.x = targetVelocity.x;
-
+				
             IsGrounded = false;
 
-            var deltaPosition = velocity * Time.deltaTime;
+            var deltaPosition = (addvelocity+velocity) * Time.deltaTime;
 			var convertedDeltaPosition = convertAbsVectorToRelativeVector(deltaPosition);
 
             var moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
@@ -177,7 +228,7 @@ namespace Platformer.Mechanics
                         //We are airborne, but hit something, so cancel vertical up and horizontal velocity.
                         velocity.x *= 0;
 						if ( -GravDir * currentNormal.y > minGroundNormalY)
-							velocity.y = Mathf.Min(velocity.y, 0);
+							velocity.y = Mathf.Min(GravDir*velocity.y, 0);
                     }
                     //remove shellDistance from actual move distance.
                     var modifiedDistance = hitBuffer[i].distance - shellRadius;
@@ -193,30 +244,35 @@ namespace Platformer.Mechanics
 			switch (gravState)
             {
                 case GravState.Up:
-					
-                    return rotateVector(relVec, 2);
+					gravint = 2;
+					break;
+                    //return rotateVector(relVec, 2);
                     
                 case GravState.Down:
-					
-					return relVec;
+					gravint = 0;
+					//return relVec;
+					break;
                     
                 case GravState.Right:
-					
-                    return rotateVector(relVec, 3);
+					gravint = 1;
+                   // return rotateVector(relVec, 3);
+				   break;
                     
                 case GravState.Left:
+					gravint = 3;
+                    //return rotateVector(relVec, 1);
+					break;
 					
-                    return rotateVector(relVec, 1);
-					
-                default:
-					return relVec;
+                
 			}
+			return rotateVector(relVec, gravint);
 		}
 		
 		public Vector2 rotateVector(Vector2 vec, int times)
 		{
 			var x = vec.x;
 			var y = vec.y;
+			
 			for (var i = 0; i < times; i++)
                 {
 					x = vec.x;
