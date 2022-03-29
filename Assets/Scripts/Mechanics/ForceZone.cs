@@ -19,7 +19,7 @@ namespace Platformer.Mechanics
 		void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
-			_renderer.color = new Color(1f,1f,1f,.5f);// is about 50% transparent
+			//_renderer.color = new Color(1f,1f,1f,.5f);// is about 50% transparent
            // if (randomAnimationStartTime)
            //    frame = Random.Range(0, sprites.Length);
            // sprites = idleAnimation;

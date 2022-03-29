@@ -14,13 +14,14 @@ namespace Platformer.Mechanics
         /// The minimum normal (dot product) considered suitable for the entity sit on.
         /// </summary>
         public float minGroundNormalY = .65f;
-		internal int GravDir = 1;
+		public int GravDir = 1;
         /// <summary>
         /// A custom gravity coefficient applied to this entity.
         /// </summary>
         public float gravityModifier = 1f;
 		public Vector2 defGravity;
-		public Vector2 addvelocity = new Vector2(0, 0);
+		public Vector2 fGravity = new Vector2(0,0);
+		//public Vector2 addvelocity = new Vector2(0, 0);
 		public float maxFallVelocity = 20f;
         /// <summary>
         /// The current velocity of the entity.
@@ -47,10 +48,10 @@ namespace Platformer.Mechanics
         protected const float minMoveDistance = 0.001f;
         protected const float shellRadius = 0.01f;
 		
-		internal bool affectedGrav = false;
-		internal int gravint;
+		public bool affectedGrav = false;
+		public int gravint;
 		internal int pushint;
-		internal int gravtemp;
+		public int gravtemp;
 		internal float maxSeed = 6f;
         /// <summary>
         /// Bounce the object's vertical velocity.
@@ -72,27 +73,31 @@ namespace Platformer.Mechanics
         }
 		public void push(Vector2 dir, int i)
         {
-			dir = convertAbsVectorToRelativeVector(dir);
-            defGravity.y = dir.y;
-            defGravity.x = dir.x;
+			var vir = convertAbsVectorToRelativeVector(dir);
+            defGravity.y = 0;
+            defGravity.x = 0;
+			fGravity.y = i*vir.y;
+            fGravity.x = vir.x;
 			maxFallVelocity = 10f;
 			pushint = i;
-			gravtemp = GravDir;
-			if(i == 3 || i == 1)
-				GravDir = -1;
-			if(i == 2 || i == 4)
-				GravDir = 1;
+			//gravtemp = GravDir;
+			if(gravState == GravState.Right ||gravState == GravState.Right)
+				fGravity.x = -fGravity.x;
+			//if(i == 2 || i == 4)
+			//	GravDir = 1;
 			affectedGrav = true;
 			
         }
 		public void stoppush(Vector2 dir)
         {
 			dir = convertAbsVectorToRelativeVector(dir);
+			fGravity.y = 0;
+            fGravity.x = 0;
             defGravity.y = -9.8f;
             defGravity.x = 0;
 			maxFallVelocity = 20f;
 			
-			GravDir = gravtemp;
+			//GravDir = gravtemp;
 			
 			affectedGrav = false;
         }
@@ -153,17 +158,17 @@ namespace Platformer.Mechanics
 			if(maxFallVelocity > -velocity.y )
 			{
             if (-velocity.y > 0 )
-                velocity += gravityModifier * defGravity * Time.deltaTime ;
+                velocity += gravityModifier * (defGravity + fGravity) * Time.deltaTime ;
             else
-                velocity += defGravity * Time.deltaTime ;
+                velocity += (defGravity + fGravity) * Time.deltaTime ;
 			}
 			}
-			else if(maxFallVelocity > -rotateVector(velocity, 4%pushint).y)
+			else if(maxFallVelocity > -rotateVector(velocity, pushint%4).y)
 			{
 			//if (-rotateVector(velocity, pushint).x > 0 )
            // velocity += gravityModifier * defGravity * Time.deltaTime ;
            // else
-            velocity += gravityModifier * defGravity * Time.deltaTime ;
+            velocity += gravityModifier * (defGravity + fGravity) * Time.deltaTime ;
 			}
 			if(IsGrounded)
 				velocity.x = targetVelocity.x;
@@ -175,7 +180,7 @@ namespace Platformer.Mechanics
 				
             IsGrounded = false;
 
-            var deltaPosition = (addvelocity+velocity) * Time.deltaTime;
+            var deltaPosition = (velocity) * Time.deltaTime;
 			var convertedDeltaPosition = convertAbsVectorToRelativeVector(deltaPosition);
 
             var moveAlongGround = new Vector2(groundNormal.y, -groundNormal.x);
@@ -245,8 +250,9 @@ namespace Platformer.Mechanics
             {
                 case GravState.Up:
 					gravint = 2;
+					//return rotateVector(relVec, 2);
 					break;
-                    //return rotateVector(relVec, 2);
+                    
                     
                 case GravState.Down:
 					gravint = 0;
@@ -254,12 +260,12 @@ namespace Platformer.Mechanics
 					break;
                     
                 case GravState.Right:
-					gravint = 1;
-                   // return rotateVector(relVec, 3);
+					gravint = 3;
+                   //return rotateVector(relVec, 3);
 				   break;
                     
                 case GravState.Left:
-					gravint = 3;
+					gravint = 1;
                     //return rotateVector(relVec, 1);
 					break;
 					
@@ -270,10 +276,10 @@ namespace Platformer.Mechanics
 		
 		public Vector2 rotateVector(Vector2 vec, int times)
 		{
-			var x = vec.x;
-			var y = vec.y;
+			var x = 0f;
+			var y = 0f;
 			
-			for (var i = 0; i < times; i++)
+			for (var i = 1; i <= times; i++)
                 {
 					x = vec.x;
 					y = vec.y;

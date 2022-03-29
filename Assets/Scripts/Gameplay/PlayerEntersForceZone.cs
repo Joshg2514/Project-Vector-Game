@@ -19,9 +19,9 @@ namespace Platformer.Gameplay
            //AudioSource.PlayClipAtPoint(token.tokenCollectAudio, token.transform.position);
 		   //model.player.GravDir = -1;
 		   //model.player.jumpState = JumpState.jummping;
-		   vel.x = -6.8f;
+		   vel.x = 6.8f;
 		   vel.y = 0;
-		   push = 3;
+		   push = -1;
 		   player.addForce(vel, push);
 		   
                	
@@ -40,9 +40,9 @@ namespace Platformer.Gameplay
            //AudioSource.PlayClipAtPoint(token.tokenCollectAudio, token.transform.position);
 		   //model.player.GravDir = -1;
 		   //model.player.jumpState = JumpState.jummping;
-		   vel.x = 6.8f;
+		   vel.x = -6.8f;
 		   vel.y = 0;
-		   push = 1;
+		   push = -1;
 		   player.addForce(vel, push);
 		   
                	
@@ -63,7 +63,7 @@ namespace Platformer.Gameplay
 		   //model.player.jumpState = JumpState.jummping;
 		   vel.x = 0;
 		   vel.y = 6.8f;
-		   push = 0;
+		   push = 1;
 		   player.addForce(vel, push);
 		   
                	
@@ -84,7 +84,7 @@ namespace Platformer.Gameplay
 		   //model.player.jumpState = JumpState.jummping;
 		   vel.x = 0;
 		   vel.y = -6.8f;
-		   push = 2;
+		   push = 1;
 		   player.addForce(vel, push);
 		   
                	

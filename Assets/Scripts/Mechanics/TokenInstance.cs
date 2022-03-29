@@ -5,7 +5,7 @@ using static Platformer.Core.Simulation;
 
 namespace Platformer.Mechanics
 {
-	/// version 0.01.3
+	/// version 0.01.2
     /// <summary>
     /// This class contains the data required for implementing token collection mechanics.
     /// It does not perform animation of the token, this is handled in a batch by the 
@@ -46,16 +46,20 @@ namespace Platformer.Mechanics
 			switch (ttype)
             {
                 case TokenType.UpToken:
+					//_renderer.color = new Color(1,200,1);
                     type = 1;
                     break;
                 case TokenType.DownToken:
+					//_renderer.color = new Color(164,255,255);
 					type = 2;
                     break;
                 case TokenType.LeftToken:
-                    type = 4;
+					//_renderer.color = new Color(255,108,1);
+                    type = 3;
                     break;
                 case TokenType.RightToken:
-                    type = 3;
+					//_renderer.color = new Color(204,1,1);
+                    type = 4;
                     break;
 			}
         }
