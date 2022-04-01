@@ -34,7 +34,7 @@ namespace Platformer.Mechanics
         /*internal new*/ public AudioSource audioSource;
         public Health health;
         public bool controlEnabled = true;
-
+		Transform ttransform;
         bool jump;
         Vector2 move;
         SpriteRenderer spriteRenderer;
@@ -52,7 +52,8 @@ namespace Platformer.Mechanics
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
             collider2d = GetComponent<Collider2D>();
-            spriteRenderer = GetComponent<SpriteRenderer>();	
+            spriteRenderer = GetComponent<SpriteRenderer>();
+			ttransform = GetComponent<Transform>();
         //    animator = GetComponent<Animator>();
         }
 
@@ -139,6 +140,15 @@ namespace Platformer.Mechanics
 		
 		public void changeGravyState(int a)
         {
+			transform.eulerAngles = new Vector3 (0, 0, 0);
+			if(a == 1)
+				transform.Rotate(new Vector3(0, 0, 180));
+			if(a == 2)
+				transform.Rotate(new Vector3(0, 0, 0));
+			if(a == 3)
+				transform.Rotate(new Vector3(0, 0, 270));
+			if(a == 4)
+				transform.Rotate(new Vector3(0, 0, 90));
 			changeGravState(a);
         }
 		public void addForce(Vector2 dir, int i)

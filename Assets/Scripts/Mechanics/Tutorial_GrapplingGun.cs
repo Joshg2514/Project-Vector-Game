@@ -1,5 +1,6 @@
 using UnityEngine;
-
+namespace Platformer.Mechanics
+{
 public class Tutorial_GrapplingGun : MonoBehaviour
 {
     [Header("Scripts Ref:")]
@@ -291,4 +292,5 @@ public class Tutorial_GrapplingRope : MonoBehaviour
         m_lineRenderer.SetPosition(0, grapplingGun.firePoint.position);
         m_lineRenderer.SetPosition(1, grapplingGun.grapplePoint);
     }
+}
 }
