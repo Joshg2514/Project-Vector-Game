@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9055542991994512322}
   - component: {fileID: 8175071963059524472}
   - component: {fileID: 8720476137919458013}
-  - component: {fileID: 1946074154576708330}
+  - component: {fileID: 6463166372187381950}
   m_Layer: 0
   m_Name: Up Token
   m_TagString: Untagged
@@ -99,11 +99,11 @@ MonoBehaviour:
   tokenCollectAudio: {fileID: 0}
   randomAnimationStartTime: 0
   ttype: 0
-  DestroyOnPickUp: 1
+  DestroyOnPickUp: 0
   idleAnimation: []
   collectedAnimation: []
---- !u!60 &1946074154576708330
-PolygonCollider2D:
+--- !u!58 &6463166372187381950
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -116,23 +116,5 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.875, y: 1}
-    newSize: {x: 0.875, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.041112542, y: 0.49076572}
-      - {x: -0.047025777, y: 0.49284935}
-      - {x: -0.42385113, y: 0.0013933182}
-      - {x: -0.42276663, y: 0.0021331906}
-      - {x: -0.032916754, y: -0.4852667}
-      - {x: 0.026477106, y: -0.48526663}
-      - {x: 0.4227667, y: 0.00034984946}
-      - {x: 0.42645, y: 0.014266908}
-      - {x: 0.14954636, y: 0.35684744}
+  serializedVersion: 2
+  m_Radius: 0.5

@@ -19,6 +19,10 @@ PrefabInstance:
       propertyPath: ttype
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8720476137919458013, guid: bca6bcaae1a7e5246b07a76eab9807c6, type: 3}
+      propertyPath: randomAnimationStartTime
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9055542991994512322, guid: bca6bcaae1a7e5246b07a76eab9807c6, type: 3}
       propertyPath: m_RootOrder
       value: 0

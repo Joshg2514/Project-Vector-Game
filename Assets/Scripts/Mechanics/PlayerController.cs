@@ -54,7 +54,7 @@ namespace Platformer.Mechanics
             collider2d = GetComponent<Collider2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
 			ttransform = GetComponent<Transform>();
-        //    animator = GetComponent<Animator>();
+            animator = GetComponent<Animator>();
         }
 
         protected override void Update()
@@ -63,8 +63,11 @@ namespace Platformer.Mechanics
             if (controlEnabled)
             {
                 move.x = Input.GetAxis("Horizontal") * controlswap; //move.x should be relative move.x
-                if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump"))
+                animator.SetFloat("Speed", Mathf.Abs(move.x));
+                if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump")) 
+                {
                     jumpState = JumpState.PrepareToJump;
+                }
                 else if (Input.GetButtonUp("Jump"))
                 {
                     stopJump = true;
