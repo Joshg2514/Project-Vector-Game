@@ -48,7 +48,7 @@ namespace Platformer.Mechanics
         protected const float minMoveDistance = 0.001f;
         protected const float shellRadius = 0.01f;
 		
-		public bool affectedGrav = false;
+		public bool affectedGrav = true;
 		public int gravint;
 		internal int pushint;
 		public int gravtemp;
@@ -109,8 +109,8 @@ namespace Platformer.Mechanics
         public void Teleport(Vector3 position)
         {
             body.position = position;
-            velocity *= 0;
-            body.velocity *= 0;
+            //velocity *= 0;
+            //body.velocity *= 0;
         }
 
         protected virtual void OnEnable()
@@ -154,7 +154,7 @@ namespace Platformer.Mechanics
         protected virtual void FixedUpdate()
         {
             //if already falling, fall faster than the jump speed, otherwise use normal gravity.
-			if(!affectedGrav){
+			if(affectedGrav){
 			if(maxFallVelocity > -velocity.y )
 			{
             if (-velocity.y > 0 )
@@ -173,9 +173,9 @@ namespace Platformer.Mechanics
 			if(IsGrounded)
 				velocity.x = targetVelocity.x;
 			else if(Mathf.Abs(velocity.x + targetVelocity.x) < Mathf.Abs(velocity.x))
-				velocity.x = targetVelocity.x*.9f;
-			else if(Mathf.Abs(velocity.x + targetVelocity.x) < maxSeed && !affectedGrav)
-				velocity.x += targetVelocity.x;
+				velocity.x = targetVelocity.x*1f;
+			else if(Mathf.Abs(velocity.x + targetVelocity.x) < maxSeed && affectedGrav)
+				velocity.x += targetVelocity.x*1f;
 			
 				
             IsGrounded = false;

@@ -15,9 +15,13 @@ namespace Platformer.Mechanics
     /// </summary>
     public class PlayerController : KinematicObject
     {
+		public GrappleRope rope1;
         public AudioClip jumpAudio;
         public AudioClip respawnAudio;
         public AudioClip ouchAudio;
+		public Vector2 direction1;
+		public Vector2 grappleDistanceVector;
+
 		
         /// <summary>
         /// Max horizontal speed of the player.
@@ -36,7 +40,7 @@ namespace Platformer.Mechanics
         public bool controlEnabled = true;
 		Transform ttransform;
         bool jump;
-        Vector2 move;
+        public Vector2 move;
         SpriteRenderer spriteRenderer;
         internal Animator animator;
         readonly PlatformerModel model = Simulation.GetModel<PlatformerModel>();
@@ -44,10 +48,18 @@ namespace Platformer.Mechanics
         public Bounds Bounds => collider2d.bounds;
 		
 		private Rigidbody2D rb;
+		
+		internal bool inZone = false;
+		internal bool grappling = false;
+		
+		public float teledis = .5f;
+		public bool blink;
+		public Vector3 opos;
 
         void Awake()
         {
-			
+			blink = true;
+			rope1.enabled = false;
 			defGravity = new Vector2(0, -9.8f);
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
@@ -59,9 +71,25 @@ namespace Platformer.Mechanics
 
         protected override void Update()
         {
-			
+			if(jumpState != JumpState.Frozen && jumpState != JumpState.Grappling){
+			if (inZone){
+					
+					if(Input.GetButtonDown("Fire1")) {
+						var ev = Schedule<PlayerStartsGrapple>();
+						ev.player = this;
+						ev.opos = opos;
+						//grappling = true;
+						//jumpState = JumpState.Grappling;
+						direction1 = GravDir * convertAbsVectorToRelativeVector((opos - transform.position).normalized);
+					
+					}
+						
+				}
+			//if (jumpState != JumpState.Grappling){
             if (controlEnabled)
             {
+				//move.x = 
+				move.y = Input.GetAxis("Vertical");
                 move.x = Input.GetAxis("Horizontal") * controlswap; //move.x should be relative move.x
                 if (jumpState == JumpState.Grounded && Input.GetButtonDown("Jump"))
                     jumpState = JumpState.PrepareToJump;
@@ -70,11 +98,22 @@ namespace Platformer.Mechanics
                     stopJump = true;
                     Schedule<PlayerStopJump>().player = this;
                 }
+				
+				if(Input.GetButtonDown("Fire2") && blink)
+				{
+					move.x = Input.GetAxis("Horizontal");
+					Vector3 mve = move.normalized;
+					Blink(mve);
+				}
+				
+				
             }
             else
             {
                 move.x = 0;
             }
+			//}
+			}
             UpdateJumpState();
             base.Update();
         }
@@ -85,11 +124,13 @@ namespace Platformer.Mechanics
             switch (jumpState)
             {
                 case JumpState.PrepareToJump:
+					affectedGrav = true;
                     jumpState = JumpState.Jumping;
                     jump = true;
                     stopJump = false;
                     break;
                 case JumpState.Jumping:
+					affectedGrav = true;
                     if (!IsGrounded)
                     {
                         Schedule<PlayerJumped>().player = this;
@@ -97,6 +138,7 @@ namespace Platformer.Mechanics
                     }
                     break;
                 case JumpState.InFlight:
+					affectedGrav = true;
                     if (IsGrounded)
                     {
                         Schedule<PlayerLanded>().player = this;
@@ -104,13 +146,27 @@ namespace Platformer.Mechanics
                     }
                     break;
                 case JumpState.Landed:
+					affectedGrav = true;
                     jumpState = JumpState.Grounded;
+					blink = true;
                     break;
+				case JumpState.Grappling:
+					affectedGrav = false;
+					//grappling = true;
+					break;
+				case JumpState.Frozen:
+					affectedGrav = false;
+					//grappling = true;
+					break;
+				
             }
         }
 
         protected override void ComputeVelocity()
         {
+			if(jumpState != JumpState.Frozen){
+			if(jumpState != JumpState.Grappling){
+				
             if (jump && IsGrounded)
             {
                 velocity.y = jumpTakeOffSpeed * model.jumpModifier;
@@ -134,9 +190,70 @@ namespace Platformer.Mechanics
           // animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
 
             targetVelocity = move * maxSpeed;
+			}
+			else{
+				jump = true;
+				if(grappling){
+					
+					velocity.x = 0;
+					velocity.y = 0;
+					grappling = false;
+				}
+					
+				Vector2 direction = GravDir * convertAbsVectorToRelativeVector((opos - transform.position).normalized);
+				
+				if(Vector3.Dot(velocity, direction) < 0){
+					rope1.enabled = false;
+					jumpState = JumpState.InFlight;
+					velocity = (10f * direction1);
+					
+				}
+				//velocity += (30f * direction) * Time.deltaTime * 1.5f;
+				else if(velocity.magnitude < (10f * direction.magnitude))
+					velocity += (5f * direction); //* Time.deltaTime * 1.5f;
+				//velocity = convertAbsVectorToRelativeVector(Vector2 velocity);
+				//transform.position += velocity * Time.deltaTime;
+				
+			}
+			}
+			else{
+				velocity.x = 0;
+				velocity.y = 0;
+			}
         }
 		
+		public void Blink(Vector3 blinkdir)
+		{
+			//Vector3
+			//if (Physics.Raycast(transform.position, blinkdir, teledis))
+			
+			RaycastHit2D hit = Physics2D.Raycast(transform.position, blinkdir, teledis, 3);
+			
+			//if (Physics.Raycast(transform.position, transform.TransformDirection(blinkdir), out hit, teledis, 3))
+			//{
+			//	Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+			//	Teleport(((blinkdir * teledis) + transform.position));
+			//	Debug.Log("Did Hit");
+			//}
+			//else
+			//{
+				Debug.DrawRay(transform.position, blinkdir * teledis, Color.white);
+			//	Debug.Log("Did not Hit");
+			//}
+			
 
+			if (hit.collider != null) {
+				Teleport(((blinkdir * (hit.distance - .5f) + transform.position)));
+				Debug.Log("Hitting: " + hit.collider.tag);
+			}
+			else
+				Teleport(((blinkdir * (teledis) + transform.position)));
+				jumpState = JumpState.InFlight;
+				blink = false;
+			//	move.x = 0;
+            //else
+			//	Teleport(((blinkdir * teledis) + transform.position));
+		}
 		
 		public void changeGravyState(int a)
         {
@@ -159,15 +276,32 @@ namespace Platformer.Mechanics
         {
 			stoppush(dir);
         }
-
-		
+		public void startGrapple(Vector3 grappleposition)
+		{
+			grappling = true;
+			jumpState = JumpState.Frozen;
+			rope1.enabled = true;
+		}
+		public void Grapple()
+		{
+			jumpState = JumpState.Grappling;
+		}
         public enum JumpState
         {
             Grounded,
             PrepareToJump,
             Jumping,
             InFlight,
-            Landed
+            Landed,
+			Grappling,
+			Frozen
         }
+		
+		public void InZone(bool stat, Vector3 pos){
+			inZone = stat;
+			opos = pos;
+			grappleDistanceVector = pos - transform.position;
+			
+		}
     }
 }

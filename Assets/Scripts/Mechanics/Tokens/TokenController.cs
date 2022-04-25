@@ -58,10 +58,10 @@ namespace Platformer.Mechanics
                             token.gameObject.SetActive(false);
                             tokens[i] = null;
                         }
-                        else
-                        {
-                            token.frame = (token.frame + 1) % token.sprites.Length;
-                        }
+                       // else
+                       // {
+                       //     token.frame = (token.frame + 1) % token.sprites.Length;
+                       // }
                     }
                 }
                 //calculate the time of the next frame.

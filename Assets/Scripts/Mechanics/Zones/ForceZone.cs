@@ -56,6 +56,7 @@ namespace Platformer.Mechanics
             var ev = Schedule<PlayerExitsForceZone>();
            /// ev.zone = this;
             ev.player = player;
+			//gameObject.SetActive(false);
 			
         }
 		void OnPlayerEnter(PlayerController player)
