@@ -135,7 +135,7 @@ Animator:
   m_GameObject: {fileID: 6711407658103165487}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7372729cb864b6c44be44275782514e7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -176,7 +176,7 @@ MonoBehaviour:
   fGravity: {x: 0, y: 0}
   maxFallVelocity: 20
   velocity: {x: 0, y: 0}
-  gravState: 0
+  gravState: 1
   affectedGrav: 0
   gravint: 0
   gravtemp: 0
