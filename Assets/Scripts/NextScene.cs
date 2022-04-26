@@ -6,9 +6,23 @@ using UnityEngine.SceneManagement;
 public class NextScene : MonoBehaviour
 {
 
-    // Update is called once per frame
-    private void OnTriggerEnter2D(Collider2D collision) 
+    private int nextSceneToLoad;
+
+    private void Start()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        nextSceneToLoad = SceneManager.GetActiveScene().buildIndex + 1;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (nextSceneToLoad > 5)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+    }
+
 }

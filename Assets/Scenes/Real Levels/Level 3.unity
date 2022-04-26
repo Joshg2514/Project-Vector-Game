@@ -4504,6 +4504,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1010782533417799476, guid: ea394b5993be7ed4889702840ea27f4a, type: 3}
+      propertyPath: DestroyOnPickUp
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8407581467933275863, guid: ea394b5993be7ed4889702840ea27f4a, type: 3}
       propertyPath: m_Name
       value: Left Token (1)
@@ -6532,6 +6536,10 @@ PrefabInstance:
     - target: {fileID: 265683031328412478, guid: bca6bcaae1a7e5246b07a76eab9807c6, type: 3}
       propertyPath: m_Name
       value: Up Token (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720476137919458013, guid: bca6bcaae1a7e5246b07a76eab9807c6, type: 3}
+      propertyPath: DestroyOnPickUp
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9055542991994512322, guid: bca6bcaae1a7e5246b07a76eab9807c6, type: 3}
       propertyPath: m_RootOrder
