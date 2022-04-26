@@ -15,7 +15,7 @@ public class NextScene : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (nextSceneToLoad > 5)
+        if (nextSceneToLoad > 4)
         {
             SceneManager.LoadScene(0);
         }
