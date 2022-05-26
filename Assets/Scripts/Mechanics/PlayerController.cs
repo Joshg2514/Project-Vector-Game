@@ -21,6 +21,7 @@ namespace Platformer.Mechanics
         public AudioClip ouchAudio;
 		public Vector2 direction1;
 		public Vector2 grappleDistanceVector;
+		public LineRenderer m_lineRenderer;
 
 		
         /// <summary>
@@ -240,7 +241,7 @@ namespace Platformer.Mechanics
 			//}
 			//else
 			//{
-				Debug.DrawRay(transform.position, blinkdir * teledis, Color.white);
+				Debug.DrawRay(transform.position, blinkdir * teledis, Color.white, .1f);
 			//	Debug.Log("Did not Hit");
 			//}
 			
@@ -251,6 +252,7 @@ namespace Platformer.Mechanics
 			}
 			else
 				Teleport(((blinkdir * (teledis) + transform.position)));
+				
 				jumpState = JumpState.InFlight;
 				blink = false;
 			//	move.x = 0;

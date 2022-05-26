@@ -17,7 +17,7 @@ namespace Platformer.Gameplay
 		   //model.player.jumpState = JumpState.jummping;
 		  
 		   player.startGrapple(opos);
-               	
+            Debug.Log("Player grapple");   	
         }
 	}
 }
